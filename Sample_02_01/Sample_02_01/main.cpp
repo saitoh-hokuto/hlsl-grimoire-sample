@@ -4,7 +4,8 @@
 // 頂点構造体
 struct SimpleVertex
 {
-    float x, y, z; // 頂点座標
+    float pos[3];
+    float color[3];// 頂点座標
 };
 
 // 関数宣言
@@ -39,9 +40,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // 4. 三角形の頂点バッファを作成
     // 頂点配列を定義
     SimpleVertex vertices[] = {
-        { -0.5f, -0.5f, 0.0f },
-        { 0.0f, 0.5f, 0.0f },
-        { 0.5f, -0.5f, 0.0f },
+        {
+            { 0.0f, 0.5f, 0.0f },//0
+            { 1.0f, 0.0f, 1.0f }
+        },
+        {
+            { 0.0f, -0.5f, 0.0f },//1
+            { 1.0f, 0.0f, 0.0f }
+        },
+        {
+            { 1.0f, 0.5f, 0.0f },//2
+            { 0.0f, 1.0f, 1.0f }
+        },
+        {
+            { -1.0f, -0.5f, 0.0f },//3
+            { 1.0f, 1.0f, 0.0f }
+        }
+        //{-0.5f, 0.5f, 0.0f },//4
     };
 
     VertexBuffer triangleVB;
@@ -51,7 +66,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // 5. 三角形のインデックスバッファを作成
     // インデックス配列
     uint16_t indices[] = {
-        0,1,2
+        0,1,2,
+        0,1,3,
+        //0,4,1,
     };
     IndexBuffer triangleIB;
     triangleIB.Init(sizeof(indices), 2);
@@ -88,7 +105,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         renderContext.SetIndexBuffer(triangleIB);
 
         // 6. ドローコール
-        renderContext.DrawIndexed(3);
+        renderContext.DrawIndexed(_countof(indices));
 
         /////////////////////////////////////////
         // 絵を描くコードを書くのはここまで！！！
@@ -115,6 +132,7 @@ void InitPipelineState(PipelineState& pipelineState, RootSignature& rs, Shader& 
     D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
     // パイプラインステートを作成
