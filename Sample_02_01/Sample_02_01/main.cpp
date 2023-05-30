@@ -55,8 +55,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         {
             { -1.0f, -0.5f, 0.0f },//3
             { 1.0f, 1.0f, 0.0f }
+        },
+        {
+            { -1.0f, -1.0f, 0.0f },//4
+            { 1.0f, 1.0f, 0.0f }
         }
-        //{-0.5f, 0.5f, 0.0f },//4
     };
 
     VertexBuffer triangleVB;
