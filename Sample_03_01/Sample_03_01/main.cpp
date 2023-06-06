@@ -37,6 +37,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+    float moveX = 0.0f;
+    float speedX = 0.125f;
+    float moveY = 0.0f;
+    float speedY = 0.125f;
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
@@ -52,7 +56,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // step-3 ワールド行列を作成
         Matrix mWorld;
-        mWorld.MakeTranslation(0.5f, 0.4f, 0.0f);
+        moveX = moveX + speedX;
+        if (moveX > 2) {
+            moveX = -2;
+        }
+        moveY = moveY + speedY;
+        if (moveY > 2) {
+            moveY = -2;
+        }
+        mWorld.MakeTranslation(moveX, moveY, 0.0f);
         // step-4 ワールド行列をグラフィックメモリにコピー
         cb.CopyToVRAM(mWorld);
         // step-5 ディスクリプタヒープを設定
