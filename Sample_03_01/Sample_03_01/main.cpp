@@ -40,7 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     float moveX = 0.0f;
     float speedX = 0.0005f;
     float moveY = 0.0f;
-    float speedY = 0.0005f;
+    float speedY = 0.0005f;   
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
