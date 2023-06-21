@@ -9,7 +9,7 @@ struct DirectionLight
     float pad1;
 
     // step-1 構造体に視点の位置を追加する
-    Vector3 eyePos;
+    Vector3 eyePos;         // 視点の位置
 };
 
 ///////////////////////////////////////////////////////////////////
