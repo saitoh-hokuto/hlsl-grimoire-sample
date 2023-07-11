@@ -92,10 +92,13 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     // step-5 光が当たったサーフェイスから視点に伸びるベクトルを求める
     float3 toEye = eyePos - psIn.worldPos;
+    //正規化する
     toEye = normalize(toEye);
 
     // step-6 鏡面反射の強さを求める
+    //dot関数を利用してrefVecとtoEyeを求める
     t = dot(refVec, toEye);
+    //内積の結果はマイナスになるので、マイナスの場合は0にする
     if (t < 0.0f)
     {
         t = 0.0f;
