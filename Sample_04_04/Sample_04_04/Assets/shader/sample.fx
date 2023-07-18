@@ -86,6 +86,15 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     {
         t = 0.0f;
     }
+    // 内積の結果が0以上、0.5未満
+    else if (t >= 0.0f || t < 0.5f) {
+        t = 0.5f;
+    }
+    //　内積の結果が0.5以上
+    else
+    {
+        t = 1.0f;
+    }
 
     // 拡散反射光を求める
     float3 diffuseLig = directionLight.color * t;
@@ -99,9 +108,16 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     // 鏡面反射の強さを求める
     t = dot(refVec, toEye);
-    if(t < 0.0f)
+    if (t < 0.0f)
     {
         t = 0.0f;
+    }
+    else if (t >= 0.0f || t < 0.5f) {
+        t = 1.0f;
+    }
+    else
+    {
+        t = 2.0f;
     }
 
     // 鏡面反射の強さを絞る
