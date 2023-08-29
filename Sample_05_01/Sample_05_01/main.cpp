@@ -1,5 +1,8 @@
 ﻿#include "stdafx.h"
 #include "system/system.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <math.h>
 
 /// <summary>
 /// ライト構造体
@@ -89,6 +92,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+    UINT frame = 0;
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
@@ -108,6 +112,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         {
             light.ptPosition.z -= g_pad[0]->GetLStickYF();
         }
+
+        light.ptColor.x = (float)abs(sin(frame++ / 100.0f / M_2_PI)) * 15.0f;
+        light.ptColor.y = (float)abs(sin(frame++/75.0f/M_2_PI)) *15.0f;
+        light.ptColor.z = (float)abs(sin(frame++ / 50.0f / M_2_PI)) * 15.0f;
 
         // 電球モデルのワールド行列を更新する
         lightModel.UpdateWorldMatrix(light.ptPosition, g_quatIdentity, g_vec3One);
