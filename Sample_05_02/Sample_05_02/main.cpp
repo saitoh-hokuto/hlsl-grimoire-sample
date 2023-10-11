@@ -1,5 +1,8 @@
 ﻿#include "stdafx.h"
 #include "system/system.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <math.h>
 
 /// <summary>
 /// ライト構造体
@@ -97,9 +100,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+    UINT frame = 0;
+
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
+        frame++;
         // レンダリング開始
         g_engine->BeginFrame();
         //////////////////////////////////////
@@ -120,10 +126,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
             light.spPosition.z -= g_pad[0]->GetLStickYF();
         }
 
+        light.spColor.x = (float)abs(sin(frame++ / 100.0f / M_2_PI)) * 15.0f;
+        light.spColor.y = (float)abs(sin(frame++ / 75.0f / M_2_PI)) * 15.0f;
+        light.spColor.z = (float)abs(sin(frame++ / 50.0f / M_2_PI)) * 15.0f;
+
+
         // step-4 コントローラー右スティックでスポットライトを回転させる
 		// Y軸周りの回転クォータニオンを計算する
         Quaternion qRotY;
-        qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
+        //qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
+        qRotY.SetRotationY((float)frame / 100);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotY.Apply(light.spDirection);
@@ -132,7 +144,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         Vector3 rotAxis;
         rotAxis.Cross(g_vec3AxisY, light.spDirection);
         Quaternion qRotX;
-        qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
+        //qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
+        qRotX.SetRotationX((float)frame / 100);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotX.Apply(light.spDirection);
