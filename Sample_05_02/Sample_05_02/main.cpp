@@ -23,7 +23,10 @@ struct Light
 
     // step-1 ライト構造体にスポットライト用のメンバ変数を追加
     Vector3 spPosition;  // 位置
-    float pad3;          // パディング
+
+    float affectPow; // EX 影響の仕方の指数
+    //float pad3;          // パディング
+
     Vector3 spColor;     // カラー
     float spRange;       // 影響範囲
     Vector3 spDirection; // 射出方向
@@ -71,6 +74,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     light.spPosition.x = 0.0f;
     light.spPosition.y = 50.0f;
     light.spPosition.z = 0.0f;
+
+    // EX 影響の仕方の指数
+    light.affectPow = 0.5f;
 
     // ライトのカラーを設定。R ＝ 10、G ＝ 10、B = 10にする
     light.spColor.x = 10.0f;
@@ -126,16 +132,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
             light.spPosition.z -= g_pad[0]->GetLStickYF();
         }
 
-        light.spColor.x = (float)abs(sin(frame++ / 100.0f / M_2_PI)) * 15.0f;
-        light.spColor.y = (float)abs(sin(frame++ / 75.0f / M_2_PI)) * 15.0f;
-        light.spColor.z = (float)abs(sin(frame++ / 50.0f / M_2_PI)) * 15.0f;
+        // EX ゲーミング発光
+        light.spColor.x = (float)abs(sin(frame++ / 1000.0f / M_2_PI)) * 15.0f;
+        light.spColor.y = (float)abs(sin(frame++ / 750.0f / M_2_PI)) * 15.0f;
+        light.spColor.z = (float)abs(sin(frame++ / 500.0f / M_2_PI)) * 15.0f;
+
+        // EX ライトの範囲が脈動する
+        light.affectPow = (float)abs(sin(frame++ / 500.0f / M_2_PI)) * 15.0f;
 
 
         // step-4 コントローラー右スティックでスポットライトを回転させる
 		// Y軸周りの回転クォータニオンを計算する
         Quaternion qRotY;
         //qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
-        qRotY.SetRotationY((float)frame / 100);
+        // EX Y軸大回転
+        qRotY.SetRotationY((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotY.Apply(light.spDirection);
@@ -145,7 +156,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         rotAxis.Cross(g_vec3AxisY, light.spDirection);
         Quaternion qRotX;
         //qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
-        qRotX.SetRotationX((float)frame / 100);
+        // EX X軸大回転
+        qRotX.SetRotationX((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotX.Apply(light.spDirection);
@@ -159,6 +171,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
+
+        // EX ティーポッド召喚
+        teapotModel.Draw(renderContext);
 
         // スポットライトモデルをドロー
         lightModel.Draw(renderContext);
@@ -210,7 +225,8 @@ void InitModel(Model& bgModel, Model& teapotModel, Model& lightModel, Light& lig
     teapotModel.Init(teapotModelInitData);
 
     teapotModel.UpdateWorldMatrix(
-        { 0.0f, 20.0f, 0.0f },
+        { 100.0f, 20.0f, 0.0f },
+        //{ 0.0f, 20.0f, 0.0f },
         g_quatIdentity,
         g_vec3One
     );
