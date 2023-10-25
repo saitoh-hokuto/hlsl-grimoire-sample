@@ -137,16 +137,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         light.spColor.y = (float)abs(sin(frame++ / 750.0f / M_2_PI)) * 15.0f;
         light.spColor.z = (float)abs(sin(frame++ / 500.0f / M_2_PI)) * 15.0f;
 
-        // EX ライトの範囲が脈動する
+        // EX ライトのボケ具合が脈動する
         light.affectPow = (float)abs(sin(frame++ / 500.0f / M_2_PI)) * 15.0f;
-
+        // EX ライトの範囲と角度が脈動する
+        light.spRange = 300.0f*(float)abs(sin(frame++ / 1000.0f / M_2_PI)) * 15.0f; //ライトの範囲
+        light.spAngle = (float)pow(sin((double)frame / 400), 2); //ライとの角度
 
         // step-4 コントローラー右スティックでスポットライトを回転させる
 		// Y軸周りの回転クォータニオンを計算する
         Quaternion qRotY;
-        //qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
+        qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
         // EX Y軸大回転
-        qRotY.SetRotationY((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
+        //qRotY.SetRotationY((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotY.Apply(light.spDirection);
@@ -155,9 +157,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         Vector3 rotAxis;
         rotAxis.Cross(g_vec3AxisY, light.spDirection);
         Quaternion qRotX;
-        //qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
+        qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
         // EX X軸大回転
-        qRotX.SetRotationX((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
+        //qRotX.SetRotationX((float)abs(sin(frame++ / 10000.0f / M_2_PI)) * 15.0f);
 
         // 計算したクォータニオンでライトの方向を回す
         qRotX.Apply(light.spDirection);
@@ -171,6 +173,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
+
+        //EX ティーポッド始動
+        Quaternion teapodQ;
+        teapodQ.SetRotationY(frame / 256);
+        teapotModel.UpdateWorldMatrix(
+            { (float)sin((double)frame / 1000) * 100, 20.0f, 0.0f },
+            teapodQ,
+            g_vec3One * (float)pow(sin((double)frame / 200), 2)
+            );
 
         // EX ティーポッド召喚
         teapotModel.Draw(renderContext);
