@@ -36,6 +36,7 @@ struct Light
     float pad4;
 
     Vector3 ambientLight;   // アンビエントライト
+    float refape; // EX 鏡面反射の絞り
 };
 //////////////////////////////////////
 //関数宣言
@@ -95,6 +96,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // 射出角度は25度
     light.spAngle = Math::DegToRad(25.0f);
 
+    // EX 鏡面反射の絞り
+    light.refape= 50.0f;
+
 
     // モデルを初期化する
     // モデルを初期化するための情報を構築する
@@ -143,6 +147,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         light.spRange = 300.0f*(float)abs(sin(frame++ / 1000.0f / M_2_PI)) * 15.0f; //ライトの範囲
         light.spAngle = (float)pow(sin((double)frame / 400), 2); //ライとの角度
 
+        //EX 鏡面反射の絞りが変化
+        light.refape = 50.0f*(float)pow(sin((double)frame / 500), 4);
+
         // step-4 コントローラー右スティックでスポットライトを回転させる
 		// Y軸周りの回転クォータニオンを計算する
         Quaternion qRotY;
@@ -176,11 +183,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         //EX ティーポッド始動
         Quaternion teapodQ;
-        teapodQ.SetRotationY(frame / 256);
+        teapodQ.SetRotationY(frame / 64);
         teapotModel.UpdateWorldMatrix(
-            { (float)sin((double)frame / 1000) * 100, 20.0f, 0.0f },
+            //{ (float)sin((double)frame / 1000) * 100, 20.0f, (float)sin((double)frame / 250) * 75 },
+            { 80.0f, 20.0f, 0.0f },
             teapodQ,
-            g_vec3One * (float)pow(sin((double)frame / 200), 2)
+            { 1.5f, 1.5f, 1.5f }
+            //g_vec3One * (float)pow(sin((double)frame / 200), 2)
             );
 
         // EX ティーポッド召喚
