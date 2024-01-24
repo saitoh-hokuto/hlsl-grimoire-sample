@@ -42,19 +42,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     SimpleVertex vertices[] = {
         {
             { -1.0f, -1.0f, 0.0f, 1.0f },   // 座標　左下
-            { 1.0f, 0.0f},                  // UV座標
-        },
-        {
-            { 1.0f, 1.0f, 0.0f, 1.0f },     // 座標　右上
             { 0.0f, 1.0f},                  // UV座標
         },
         {
+            { 1.0f, 1.0f, 0.0f, 1.0f },     // 座標　右上
+            { 1.0f, 0.0f},                  // UV座標
+        },
+        {
             { 1.0f, -1.0f, 0.0f, 1.0f },    // 座標　右下
-            { 0.0f, 0.0f},                  // UV座標
+            { 1.0f, 1.0f},                  // UV座標
         },
         {
             { -1.0f, 1.0f, 0.0f, 1.0f },    // 座標　左上
-            { 1.0f, 1.0f},                  // UV座標
+            { 0.0f, 0.0f},                  // UV座標
         }
     };
 
